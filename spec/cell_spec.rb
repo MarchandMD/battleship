@@ -19,6 +19,21 @@ RSpec.describe Cell do
     
     it 'is initialized with @ship instance variable' do
       expect(cell.ship).to eq(nil)
+    end  
+  end
+  describe '#empty?' do
+    it 'can check if a coordinate is empty' do
+      cell = Cell.new("B4")
+      expect(cell.empty).to eq(true)
+    end
+  end
+  describe '#place_ship' do
+    it 'can place a ship and further tests the empty? method' do
+      cell = Cell.new("B4")
+      cruiser = Ship.new("Cruiser", 3)
+      cell.place_ship(cruiser)
+      cell.ship
+      expect(cell.empty?).to eq(false)
     end
   end
 end
