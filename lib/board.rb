@@ -57,4 +57,15 @@ class Board
       false
     end
   end
+  def place(ship, array)
+    cell_1 = @cells[array[0]]
+    cell_2 = @cells[array[1]]
+    cell_1.place_ship(ship)
+    cell_2.place_ship(ship)
+    if array.length == 3
+      cell_3 = @cells[array[2]]
+      cell_3.place_ship(ship)
+    end
+  end
+
 end
