@@ -45,8 +45,14 @@ class Board
     board_rows = 'ABCD'
     board_columns = '1234'
 
+    # the first if statement
     if board_rows.include?(letters) || board_columns.include?(numbers) && array.length == ship.length
-      true
+      # the second if statement
+      if letters.length == numbers.length && board_rows.include?(letters) && board_columns.include?(numbers)
+        false
+      else
+        true
+      end
     else
       false
     end
