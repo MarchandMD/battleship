@@ -31,10 +31,21 @@ class Board
   end
 
   def valid_placement?(ship, array)
-    if array.length == ship.length
-      if array == array.sorted
-      end
-    if array.length == ship.length
+    letters = []
+    numbers = []
+
+    array.each do |coordinate|
+      letters << coordinate[0]
+      numbers << coordinate[1]
+    end
+
+    letters = letters.join
+    numbers = numbers.join
+
+    board_rows = 'ABCD'
+    board_columns = '1234'
+
+    if board_rows.include?(letters) || board_columns.include?(numbers) && array.length == ship.length
       true
     else
       false
