@@ -35,8 +35,12 @@ class Board
     numbers = []
 
     array.each do |coordinate|
-      letters << coordinate[0]
-      numbers << coordinate[1]
+      if @cells[coordinate].ship.nil?
+        letters << coordinate[0]
+        numbers << coordinate[1]
+      else
+        return false
+      end
     end
 
     letters = letters.join
@@ -68,4 +72,7 @@ class Board
     end
   end
 
+  def render2
+   @cells['A1'].render
+  end
 end
