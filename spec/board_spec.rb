@@ -71,13 +71,22 @@ RSpec.describe Board do
   end
 
   describe '#render2' do
-    it 'can render the board' do
+    it 'can render the board with dots' do
       board = Board.new
       cruiser = Ship.new('Cruiser', 3)
       board.place(cruiser, %w[A1 A2 A3])
       expect(board.cells['A1']).to be_a Cell
-      # binding.pry
       expect(board.cells['A1'].render).to eq('.')
+      expect { board.render2 }.to output("  1 2 3 4 \nA . . . . \nB . . . . \nC . . . . \nD . . . . \n").to_stdout
+    end
+
+    it 'can reveal the ships' do
+      board = Board.new
+      cruiser = Ship.new('Cruiser', 3)
+      board.place(cruiser, %w[A1 A2 A3])
+      expect(board.cells['A1']).to be_a Cell
+      expect { board.render2(true) }.to output("  1 2 3 4 \nA S S S . \nB . . . . \nC . . . . \nD . . . . \n").to_stdout
+
     end
   end
 end
