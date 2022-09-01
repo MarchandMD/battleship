@@ -67,5 +67,4 @@ class Board
       cell_3.place_ship(ship)
     end
   end
-
 end
