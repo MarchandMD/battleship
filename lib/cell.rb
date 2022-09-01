@@ -43,7 +43,7 @@ class Cell
       else
         '.'
       end
-    elsif @fired_upon == false && show == false
+    elsif @fired_upon == false 
         '.'
     elsif @fired_upon == true && show == false && @ship.nil?
       'M'
