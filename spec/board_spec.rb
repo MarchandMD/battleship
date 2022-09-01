@@ -75,7 +75,9 @@ RSpec.describe Board do
       board = Board.new
       cruiser = Ship.new('Cruiser', 3)
       board.place(cruiser, %w[A1 A2 A3])
-      expect(board.render2).to eq('boo')
+      expect(board.cells['A1']).to be_a Cell
+      # binding.pry
+      expect(board.cells['A1'].render).to eq('.')
     end
   end
 end

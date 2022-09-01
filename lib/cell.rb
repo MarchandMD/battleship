@@ -40,6 +40,8 @@ class Cell
         'S'
       elsif @fired_upon == true
         'H'
+      else
+        '.'
       end
     elsif @fired_upon == false && show == false
         '.'
