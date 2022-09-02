@@ -19,14 +19,12 @@ RSpec.describe Turn do
   end
   describe '#ai_ship_placement' do
     it 'can randomly place ships for the ai' do
-    
-    
-    ai = Board.new
-    human = Board.new
-    turn = Turn.new(human, ai)
-    expected = human.render2
-    turn.ai_ship_placement
-    expect(ai.render2(true)).not_to eq(expected)
+      ai = Board.new
+      human = Board.new
+      turn = Turn.new(human, ai)
+      expected = human.render2
+      turn.ai_ship_placement
+      expect(ai.render2(true)).not_to eq(expected)
     end
   end
 end

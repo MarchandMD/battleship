@@ -36,17 +36,19 @@ RSpec.describe Board do
       expect(board.valid_placement?(submarine, %w[A1 C1])).to eq(false)
       expect(board.valid_placement?(cruiser, %w[A3 A2 A1])).to eq(false)
       expect(board.valid_placement?(submarine, %w[C1 B1])).to eq(false)
+      expect(board.valid_placement?(cruiser, %w[B2 C3 C4])).to eq(false)
     end
 
-    it "doesn't allow diagonal placement of ships" do
+    xit "doesn't allow diagonal placement of ships" do
       board = Board.new
       cruiser = Ship.new('Cruiser', 3)
       submarine = Ship.new('Submarine', 2)
       expect(board.valid_placement?(cruiser, %w[A1 B2 C3])).to be false
       expect(board.valid_placement?(submarine, %w[C2 D3])).to be false
+      expect(board.valid_placement?(cruiser, %w[B2 C3 D4])).to eq(false)
     end
 
-    it 'can make sure ships are not overlapping' do
+    xit 'can make sure ships are not overlapping' do
       board = Board.new
       cruiser = Ship.new('Cruiser', 3)
       board.place(cruiser, %w[A1 A2 A3])
