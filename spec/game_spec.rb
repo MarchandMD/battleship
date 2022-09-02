@@ -51,6 +51,8 @@ RSpec.describe Game do
   end
 
   describe '#game_over?' do
+    it '' do
+    end
   end
 
   describe '#game_over' do

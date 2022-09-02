@@ -98,4 +98,7 @@ class Game
       end
     end
   end
+
+  def game_over?
+  end
 end
