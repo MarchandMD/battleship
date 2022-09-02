@@ -1,5 +1,5 @@
 class Board
-  attr_reader :cells
+  attr_reader :cells, :occupied_cells
 
   def initialize
     @cells = {
@@ -20,6 +20,7 @@ class Board
       'D3' => Cell.new('D3'),
       'D4' => Cell.new('D4')
     }
+    @occupied_cells = []
   end
 
   def valid_coordinate?(coordinate)
@@ -30,104 +31,18 @@ class Board
     end
   end
 
-  # def valid_placement?(ship, array)
-  #   letters = []
-  #   numbers = []
-
-  #   array.each do |coordinate|
-  #     if @cells[coordinate].ship.nil?
-  #       letters << coordinate[0]
-  #       numbers << coordinate[1]
-  #     else
-  #       return false
-  #     end
-  #   end
-
-  #   letters = letters.join
-  #   numbers = numbers.join
-
-  #   board_rows = 'ABCD'
-  #   board_columns = '1234'
-
-  #   # the first if statement
-  #   if board_rows.include?(letters) || board_columns.include?(numbers) && array.length == ship.length
-  #     # the second if statement - diagonal check
-  #     if letters.length == numbers.length && board_rows.include?(letters) && board_columns.include?(numbers)
-  #       false
-  #     else
-  #       true
-  #     end
-  #   else
-  #     false
-  #   end
-  # end
-
   def valid_placement?(ship, array)
-    possible_cruiser_positions = [%w[A1 A2 A3],
-                                  %w[A2 A3 A4],
-                                  %w[B1 B2 B3],
-                                  %w[B2 B3 B4],
-                                  %w[C1 C2 C3],
-                                  %w[C2 C3 C4],
-                                  %w[D1 D2 D3],
-                                  %w[D2 D3 D4],
-                                  %w[A1 B1 C1],
-                                  %w[A2 B2 C2],
-                                  %w[A3 B3 C3],
-                                  %w[A4 B4 C4],
-                                  %w[B1 C1 D1],
-                                  %w[B2 C2 D2],
-                                  %w[B3 C3 D3],
-                                  %w[B4 C4 D4]]
 
-    possible_sub_positions = [%w[A1 A2],
-                              %w[A2 A3],
-                              %w[A3 A4],
-                              %w[B1 B2],
-                              %w[B2 B3],
-                              %w[B3 B4],
-                              %w[C1 C2],
-                              %w[C2 C3],
-                              %w[C3 C4],
-                              %w[D1 D2],
-                              %w[D2 D3],
-                              %w[D3 D4],
-                              %w[A1 B1],
-                              %w[A2 B2],
-                              %w[A3 B3],
-                              %w[A4 B4],
-                              %w[B1 C1],
-                              %w[B2 C2],
-                              %w[B3 C3],
-                              %w[B4 C4],
-                              %w[C1 D1],
-                              %w[C2 D2],
-                              %w[C3 D3],
-                              %w[C4 D4]]
-
-    array.each do |coordinate|
-      if @cells[coordinate].ship.nil?
-        if ship.length == 3 && array.length == 3
-          if possible_cruiser_positions.include?(array)
-            true
-          else
-            false
-          end
-        else
-          false
-        end
-        if ship.length == 2 && array.length == 2
-          if possible_sub_positions.include?(array)
-            true
-          else
-            false
-          end
-        else
-          false
-        end
-      else
-        false
+    array.each do |x|
+      if @occupied_cells.include?(x)
+        return false
       end
+    end
+
+    if (valid_cruiser_placement(array) && ship.length == array.length) || (valid_submarine_placement(array) && ship.length == array.length)
+      true
+    else
+      false
     end
   end
 
@@ -140,6 +55,9 @@ class Board
       cell_3 = @cells[array[2]]
       cell_3.place_ship(ship)
     end
+    array.each do |x|
+      @occupied_cells << x
+    end
   end
 
   def render2(reveal = false)
@@ -150,7 +68,53 @@ class Board
     end
   end
 
-  def good_sub_guess
-    ship.length == 2 && array.length == 2
+  def valid_cruiser_placement(arr)
+    valid_cruiser_positions = [%w[A1 A2 A3],
+                               %w[A2 A3 A4],
+                               %w[B1 B2 B3],
+                               %w[B2 B3 B4],
+                               %w[C1 C2 C3],
+                               %w[C2 C3 C4],
+                               %w[D1 D2 D3],
+                               %w[D2 D3 D4],
+                               %w[A1 B1 C1],
+                               %w[A2 B2 C2],
+                               %w[A3 B3 C3],
+                               %w[A4 B4 C4],
+                               %w[B1 C1 D1],
+                               %w[B2 C2 D2],
+                               %w[B3 C3 D3],
+                               %w[B4 C4 D4]]
+
+    valid_cruiser_positions.include?(arr)
+  end
+
+  def valid_submarine_placement(arr)
+    valid_sub_positions = [%w[A1 A2],
+                           %w[A2 A3],
+                           %w[A3 A4],
+                           %w[B1 B2],
+                           %w[B2 B3],
+                           %w[B3 B4],
+                           %w[C1 C2],
+                           %w[C2 C3],
+                           %w[C3 C4],
+                           %w[D1 D2],
+                           %w[D2 D3],
+                           %w[D3 D4],
+                           %w[A1 B1],
+                           %w[A2 B2],
+                           %w[A3 B3],
+                           %w[A4 B4],
+                           %w[B1 C1],
+                           %w[B2 C2],
+                           %w[B3 C3],
+                           %w[B4 C4],
+                           %w[C1 D1],
+                           %w[C2 D2],
+                           %w[C3 D3],
+                           %w[C4 D4]]
+
+    valid_sub_positions.include?(arr)
   end
 end
