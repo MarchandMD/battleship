@@ -25,6 +25,7 @@ RSpec.describe Board do
     end
   end
 
+
   describe '#valid_placement?' do
     it 'checks if ship length is correct when placing' do
       board = Board.new
@@ -32,14 +33,9 @@ RSpec.describe Board do
       submarine = Ship.new('Submarine', 2)
       expect(board.valid_placement?(cruiser, %w[A1 A2])).to eq(false)
       expect(board.valid_placement?(submarine, %w[A2 A3 A4])).to eq(false)
-      expect(board.valid_placement?(cruiser, %w[A1 A2 A4])).to eq(false)
-      expect(board.valid_placement?(submarine, %w[A1 C1])).to eq(false)
-      expect(board.valid_placement?(cruiser, %w[A3 A2 A1])).to eq(false)
-      expect(board.valid_placement?(submarine, %w[C1 B1])).to eq(false)
-      expect(board.valid_placement?(cruiser, %w[B2 C3 C4])).to eq(false)
     end
 
-    xit "doesn't allow diagonal placement of ships" do
+    it "doesn't allow diagonal placement of ships" do
       board = Board.new
       cruiser = Ship.new('Cruiser', 3)
       submarine = Ship.new('Submarine', 2)
@@ -48,12 +44,19 @@ RSpec.describe Board do
       expect(board.valid_placement?(cruiser, %w[B2 C3 D4])).to eq(false)
     end
 
-    xit 'can make sure ships are not overlapping' do
+    it 'can make sure ships are not overlapping' do
       board = Board.new
       cruiser = Ship.new('Cruiser', 3)
       board.place(cruiser, %w[A1 A2 A3])
       submarine = Ship.new('Submarine', 2)
       expect(board.valid_placement?(submarine, %w[A1 B1])).to eq(false)
+    end
+
+    it 'can determine if a placement is valid' do
+      board = Board.new
+      cruiser = Ship.new('Cruiser', 3)
+      submarine = Ship.new('Submarine', 2)
+      expect(board.valid_placement?(submarine, %w[A1 B1])).to eq(true)
     end
   end
 
@@ -90,5 +93,41 @@ RSpec.describe Board do
       expect { board.render2(true) }.to output("  1 2 3 4 \nA S S S . \nB . . . . \nC . . . . \nD . . . . \n").to_stdout
 
     end
+  end
+
+  describe '#valid_cruiser_placement' do
+    board = Board.new
+    cruiser = Ship.new('Cruiser', 3)
+
+    it 'can determine if cruiser placement is valid' do
+      expect(board.valid_cruiser_placement(%w[A1 A2 A3])).to eq(true)
+    end
+    it 'can determine if cruiser placement is not valid' do
+      expect(board.valid_cruiser_placement(%w[A1 A2 B3])).to be false
+    end
+
+  end
+  describe '#valid_submarine_placement' do
+    board = Board.new
+    submarine = Ship.new('Cruiser', 2)
+
+    it 'can determine if submarine placement is valid' do
+      expect(board.valid_submarine_placement(%w[A1 A2])).to eq(true)
+    end
+    it 'can determine if submarine placement is not valid' do
+      expect(board.valid_submarine_placement(%w[A1 C2])).to be false
+    end
+
+  end
+
+  describe '#occupied_cells' do
+    board = Board.new
+    cruiser = Ship.new('Cruiser', 3)
+    board.place(cruiser, %w[A1 A2 A3])
+    submarine = Ship.new('Submarine', 2)
+    it 'has a list of occupied cells' do
+      expect(board.occupied_cells).to eq(%w[A1 A2 A3])
+    end
+
   end
 end
