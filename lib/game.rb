@@ -1,28 +1,34 @@
 require './lib/game'
 require './lib/board'
 require './lib/cell'
+require './lib/ship'
 
 class Game
+  attr_reader :player_cruiser, :player_cruiser_position, :player_submarine, :player_submarine_position
+
+
   def initialize
     @computer_board = Board.new
     @player_board = Board.new
     @current_turn = 'computer' # either 'computer' or 'player'
+    @player_cruiser = Ship.new('Cruiser', 3)
+    @player_cruiser_position = nil
+    @player_submarine = Ship.new('Submarine', 2)
+    @player_submarine_position = nil
   end
 
   def start
     welcome_message
-    render_computer_board
-    render_player_board
-    # place_computer_ships
-    # place_player_ships
+    place_computer_ships
+    place_player_ships
     # game_loop
   end
 
   def welcome_message
-    puts "Welcome to BATTLESHIP"
-    puts "Enter p to play. Enter q to quit"
+    puts 'Welcome to BATTLESHIP'
+    puts 'Enter p to play. Enter q to quit'
     input = gets.chomp.downcase
-    until input == 'p' || input == 'q'
+    until %w[p q].include?(input)
       puts 'please only enter: p or q'
       input = gets.chomp.downcase
     end
@@ -36,9 +42,44 @@ class Game
     @player_board.render2
   end
 
-  def place_computer_ships; end
+  def place_computer_ships
+    puts 'I have laid out my ships on the grid.'
+    puts 'You now need to lay out your two ships.'
+    puts 'The Cruiser is three units long and the Submarine is two units long.'
+    render_player_board
+  end
 
-  def place_player_ships; end
+  def place_player_ships
+    # render_player_board
+    prompt_player_for_cruiser
+    @player_board.place(@player_cruiser, @player_cruiser_position)
+    @player_board.render2(true)
+    prompt_player_for_submarine
+    @player_board.place(@player_submarine, @player_submarine_position)
+    @player_board.render2(true)
+  end
+
+  def prompt_player_for_cruiser
+    puts 'Enter the squares for the Cruiser (example - A1 A2 A3): '
+    input = gets.chomp.upcase
+    @player_cruiser_position = input.split(' ')
+    until @player_board.valid_placement?(@player_cruiser, @player_cruiser_position)
+      puts 'try again  (example - A1 A2 A3):'
+      input = gets.chomp.upcase
+      @player_cruiser_position = input.split(' ')
+    end
+  end
+
+  def prompt_player_for_submarine
+    puts 'Enter the squares for the Submarine (example - B1 B2): '
+    input = gets.chomp.upcase
+    @player_submarine_position = input.split(' ')
+    until @player_board.valid_placement?(@player_submarine, @player_submarine_position)
+      puts 'try again  (example - B1 B2):'
+      input = gets.chomp.upcase
+      @player_submarine_position = input.split(' ')
+    end
+  end
 
   def game_loop
     loop do

@@ -43,6 +43,8 @@ RSpec.describe Game do
   end
 
   describe '#place_player_ships' do
+    it 'asks for 3 squares for the Cruiser' do
+    end
   end
 
   describe '#start_turn' do
@@ -61,6 +63,11 @@ RSpec.describe Game do
   end
 
   describe '#computer_makes_guess' do
+  end
+
+  describe '#prompt_player_for_cruiser' do
+    it 'asks for cruiser coordinates' do
+    end
   end
 
 end
