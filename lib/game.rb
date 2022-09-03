@@ -6,7 +6,6 @@ require './lib/ship'
 class Game
   attr_reader :player_cruiser, :player_cruiser_position, :player_submarine, :player_submarine_position
 
-
   def initialize
     @computer_board = Board.new
     @player_board = Board.new
@@ -15,6 +14,9 @@ class Game
     @player_cruiser_position = nil
     @player_submarine = Ship.new('Submarine', 2)
     @player_submarine_position = nil
+    @possible_player_guesses = %w[A1 A2 A3 A4 B1 B2 B3 B4 C1 C2 C3 C4 D1 D2 D3 D4]
+    @possible_computer_guesses = %w[A1 A2 A3 A4 B1 B2 B3 B4 C1 C2 C3 C4 D1 D2 D3 D4]
+    @player_turn = true
   end
 
   def start
@@ -87,18 +89,44 @@ class Game
       if game_over?
         game_over_method
         break
-      elsif player_turn?
+      elsif @player_turn == true
         player_makes_guess
         render_computer_board
         render_player_board
+        @player_turn = false
       else
         computer_makes_guess
         render_computer_board
         render_player_board
+        @player_turn = true
       end
     end
   end
 
+  # need to make sure the total_hp doesnt save after looping or it will break
   def game_over?
+    hp_coords = []
+    hp_coords << @player_cruiser_position
+    hp_coords << @player_submarine_position
+    hp_coords.each do |hp|
+      total_hp += hp.cell.ship.health
+    end
+    total_hp == 0
+  end
+
+  def player_makes_guess
+    input = gets.chomp.upcase
+    until @possible_player_guesses.include?(input)
+      puts 'Invalid Coordinate, please try again.'
+      input = gets.chomp.upcase
+
+    end
+    @possible_player_guesses.delete(input)
+    @computer_board.cells[input].fire_upon
+  end
+
+  def computer_makes_guess
+    @possible_computer_guesses.shuffle!
+    @player_board.cells[(@possible_computer_guesses.shift)].fire_upon
   end
 end
