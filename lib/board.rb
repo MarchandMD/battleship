@@ -1,5 +1,5 @@
 class Board
-  attr_reader :cells, :occupied_cells
+  attr_reader :cells, :player_occupied_cells, :computer_occupied_cells
 
   def initialize
     @cells = {
@@ -20,7 +20,8 @@ class Board
       'D3' => Cell.new('D3'),
       'D4' => Cell.new('D4')
     }
-    @occupied_cells = []
+    @player_occupied_cells = []
+    @computer_occupied_cells = []
   end
 
   def valid_coordinate?(coordinate)
@@ -32,10 +33,9 @@ class Board
   end
 
   def valid_placement?(ship, array)
-
     array.each do |x|
-      if @occupied_cells.include?(x)
-        return false
+      if @player_occupied_cells.include?(x)
+       return false
       end
     end
 
@@ -43,6 +43,34 @@ class Board
       true
     else
       false
+    end
+  end
+
+  def valid_computer_placement?(ship, array)
+    array.each do |x|
+      if @computer_occupied_cells.include?(x)
+       return false
+      end
+    end
+
+    if (valid_cruiser_placement(array) && ship.length == array.length) || (valid_submarine_placement(array) && ship.length == array.length)
+      true
+    else
+      false
+    end
+  end
+
+  def place_computer_ship(ship, array)
+    cell_1 = @cells[array[0]]
+    cell_2 = @cells[array[1]]
+    cell_1.place_ship(ship)
+    cell_2.place_ship(ship)
+    if array.length == 3
+      cell_3 = @cells[array[2]]
+      cell_3.place_ship(ship)
+    end
+    array.each do |x|
+      @computer_occupied_cells << x
     end
   end
 
@@ -56,7 +84,7 @@ class Board
       cell_3.place_ship(ship)
     end
     array.each do |x|
-      @occupied_cells << x
+      @player_occupied_cells << x
     end
   end
 
@@ -68,7 +96,7 @@ class Board
     end
   end
 
-  def valid_cruiser_placement(arr)
+  def valid_cruiser_placement(arr = 'computer')
     valid_cruiser_positions = [%w[A1 A2 A3],
                                %w[A2 A3 A4],
                                %w[B1 B2 B3],
@@ -85,11 +113,14 @@ class Board
                                %w[B2 C2 D2],
                                %w[B3 C3 D3],
                                %w[B4 C4 D4]]
-
-    valid_cruiser_positions.include?(arr)
+    if arr != 'computer'
+      valid_cruiser_positions.include?(arr)
+    else
+      valid_cruiser_positions.sample
+    end
   end
 
-  def valid_submarine_placement(arr)
+  def valid_submarine_placement(arr = 'computer')
     valid_sub_positions = [%w[A1 A2],
                            %w[A2 A3],
                            %w[A3 A4],
@@ -115,6 +146,10 @@ class Board
                            %w[C3 D3],
                            %w[C4 D4]]
 
-    valid_sub_positions.include?(arr)
+    if arr != 'computer'
+      valid_sub_positions.include?(arr)
+    else
+      valid_sub_positions.shuffle.pop
+    end
   end
 end
