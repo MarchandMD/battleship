@@ -7,7 +7,7 @@ require 'pry'
 class Game
   attr_reader :computer_board,
               :player_board,
-              :current_turn,
+              :player_turn,
               :player_cruiser,
               :player_cruiser_position,
               :player_submarine,
@@ -15,12 +15,13 @@ class Game
               :computer_cruiser,
               :computer_cruiser_position,
               :computer_submarine,
-              :computer_submarine_position
+              :computer_submarine_position,
+              :possible_player_guesses
+              :possible_computer_guesses
 
   def initialize
     @computer_board = Board.new
     @player_board = Board.new
-    @current_turn = 'computer'
     @player_cruiser = Ship.new('Cruiser', 3)
     @player_cruiser_position = nil
     @player_submarine = Ship.new('Submarine', 2)
@@ -29,6 +30,9 @@ class Game
     @computer_cruiser_position = nil
     @computer_submarine = Ship.new('Submarine', 2)
     @computer_submarine_position = nil
+    @possible_player_guesses = %w[A1 A2 A3 A4 B1 B2 B3 B4 C1 C2 C3 C4 D1 D2 D3 D4]
+    @possible_computer_guesses = %w[A1 A2 A3 A4 B1 B2 B3 B4 C1 C2 C3 C4 D1 D2 D3 D4]
+    @player_turn = true
   end
 
   def start
@@ -49,7 +53,7 @@ class Game
   end
 
   def render_computer_board
-    @computer_board.render2
+    @computer_board.render2(true)
   end
 
   def show_computer_ships
@@ -67,7 +71,9 @@ class Game
   def place_computer_ships
     # puts 'this is the computer board'
     place_computer_cruiser
+    render_computer_board
     place_computer_submarine
+    render_computer_board
     puts 'I have laid out my ships on the grid.'
     puts 'You now need to lay out your two ships.'
     puts 'The Cruiser is three units long and the Submarine is two units long.'
@@ -90,7 +96,7 @@ class Game
   end
 
   def no_overlap
-    (@computer_board.computer_occupied_cells + @computer_submarine_position).uniq.length == (@computer_board.computer_occupied_cells + @computer_submarine_position).length # this could just be 5  
+    (@computer_board.computer_occupied_cells + @computer_submarine_position).uniq.length == (@computer_board.computer_occupied_cells + @computer_submarine_position).length # this could just be 5
   end
 
   def place_player_ships
@@ -130,19 +136,44 @@ class Game
       if game_over?
         game_over
         break
-      elsif player_turn?
+      elsif @player_turn == true
         player_makes_guess
         render_computer_board
         render_player_board
+        @player_turn = false
       else
         computer_makes_guess
         render_computer_board
         render_player_board
+        @player_turn = true
       end
     end
   end
 
-  def game_over?; end
+  # need to make sure the total_hp doesnt save after looping or it will break
+  def game_over?
+    hp_coords = []
+    hp_coords << @player_cruiser_position
+    hp_coords << @player_submarine_position
+    hp_coords.each do |hp|
+      total_hp += hp.cell.ship.health
+    end
+    total_hp == 0
+  end
 
-  def game_over; end
+  def player_makes_guess
+    input = gets.chomp.upcase
+    until @possible_player_guesses.include?(input)
+      puts 'Invalid Coordinate, please try again.'
+      input = gets.chomp.upcase
+
+    end
+    @possible_player_guesses.delete(input)
+    @computer_board.cells[input].fire_upon
+  end
+
+  def computer_makes_guess
+    @possible_computer_guesses.shuffle!
+    @player_board.cells[(@possible_computer_guesses.shift)].fire_upon
+  end
 end
