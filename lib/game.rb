@@ -41,19 +41,20 @@ class Game
     @computer_guess = nil
   end
 
-  def computer_loses
-    @computer_cruiser.health == 0 && @computer_submarine.health == 0
-  end
-
-  def player_loses
-    @player_cruiser.health == 0 && @player_submarine.health == 0
-  end
 
   def start
     welcome_message
     place_computer_ships
     place_player_ships
     game_loop
+  end
+
+  def computer_loses
+    @computer_cruiser.health == 0 && @computer_submarine.health == 0
+  end
+
+  def player_loses
+    @player_cruiser.health == 0 && @player_submarine.health == 0
   end
 
   def welcome_message
@@ -74,10 +75,6 @@ class Game
   end
 
   def render_player_board
-    @player_board.render2(true)
-  end
-
-  def show_player_board
     @player_board.render2(true)
   end
 
