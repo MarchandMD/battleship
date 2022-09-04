@@ -4,7 +4,6 @@ require './lib/cell'
 
 RSpec.describe Game do
 
-
   it 'exists' do
     game = Game.new
     expect(game).to be_a Game
@@ -14,7 +13,6 @@ RSpec.describe Game do
     game = Game.new
     expect(game.computer_board).to be_a Board
     expect(game.player_board).to be_a Board
-    expect(game.current_turn).to eq('computer')
     expect(game.player_cruiser).to be_a Ship
     expect(game.player_submarine).to be_a Ship
     expect(game.player_cruiser_position).to eq(nil)
@@ -73,7 +71,9 @@ RSpec.describe Game do
   end
 
   describe '#game_over?' do
-    it '' do
+    it 'can determine if either player has lost' do
+      game = Game.new
+      expect(game.game_over?).to be false
     end
   end
 
@@ -91,6 +91,14 @@ RSpec.describe Game do
 
   describe '#prompt_player_for_cruiser' do
     it 'asks for cruiser coordinates' do
+    end
+  end
+
+  describe '#show_both_boards' do
+    it 'renders both boards to stdout' do
+      game = Game.new
+      game.place_computer_ships
+      expect{ game.show_both_boards }.to output.to_stdout
     end
   end
 

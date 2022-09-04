@@ -70,6 +70,7 @@ RSpec.describe Cell do
       cell_1.fire_upon
       expect(cell_1.render).to eq('M')
     end
+
     it 'renders more complex actions' do
       cell_2 = Cell.new('C3')
       cruiser = Ship.new('Cruiser', 3)
@@ -82,6 +83,15 @@ RSpec.describe Cell do
       cruiser.hit
       expect(cruiser.sunk?).to eq(true)
       expect(cell_2.render).to eq('X')
+    end
+  end
+
+  describe '#ship_present?' do
+    it 'can determine if a ship is present in a cell' do
+      cell_2 = Cell.new('C3')
+      cruiser = Ship.new('Cruiser', 3)
+      cell_2.place_ship(cruiser)
+      expect(cell_2.ship_present?).to be true
     end
   end
 end
