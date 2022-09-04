@@ -28,9 +28,19 @@ class Game
     puts 'Welcome to BATTLESHIP'
     puts 'Enter p to play. Enter q to quit'
     input = gets.chomp.downcase
-    until %w[p q].include?(input)
-      puts 'please only enter: p or q'
-      input = gets.chomp.downcase
+    until %w[p].include?(input)
+      if input == 'q'
+        start.quit
+      else puts 'please only enter: p or q'
+        input = gets.chomp.downcase
+        #cool code goes here
+      end
+    end
+  end
+
+  def quit
+    if input == 'q'
+      exit!
     end
   end
 
@@ -64,7 +74,7 @@ class Game
     input = gets.chomp.upcase
     @player_cruiser_position = input.split(' ')
     until @player_board.valid_placement?(@player_cruiser, @player_cruiser_position)
-      puts 'try again  (example - A1 A2 A3):'
+      puts 'try again (example - A1 A2 A3):'
       input = gets.chomp.upcase
       @player_cruiser_position = input.split(' ')
     end
@@ -75,7 +85,7 @@ class Game
     input = gets.chomp.upcase
     @player_submarine_position = input.split(' ')
     until @player_board.valid_placement?(@player_submarine, @player_submarine_position)
-      puts 'try again  (example - B1 B2):'
+      puts 'try again (example - B1 B2):'
       input = gets.chomp.upcase
       @player_submarine_position = input.split(' ')
     end
@@ -97,8 +107,5 @@ class Game
         render_player_board
       end
     end
-  end
-
-  def game_over?
   end
 end
