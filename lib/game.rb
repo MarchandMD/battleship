@@ -40,6 +40,7 @@ class Game
     @total_player_health = 5
     @total_computer_health = 5
     @computer_guess = nil
+    @player_guess = nil
   end
 
   def start
@@ -83,7 +84,7 @@ class Game
     place_computer_cruiser
     place_computer_submarine
     puts "I have laid out my ships on the grid.\nYou now need to lay out your two ships.\nThe Cruiser is three units long and the Submarine is two units long."
-    render_player_board
+    # render_player_board
   end
 
   def place_computer_cruiser
@@ -108,7 +109,7 @@ class Game
   def place_player_ships
     prompt_player_for_cruiser
     @player_board.place(@player_cruiser, @player_cruiser_position)
-    @player_board.render2(true)
+    # @player_board.render2(true)
     prompt_player_for_submarine
     @player_board.place(@player_submarine, @player_submarine_position)
     # @player_board.render2(true)
@@ -137,6 +138,7 @@ class Game
   end
 
   def game_loop
+    show_both_boards
     loop do
       if game_over?
         game_over
@@ -169,11 +171,10 @@ class Game
   def game_over
     if computer_loses
       puts 'You win!'
-      welcome_message
     else
       puts 'I win'
-      welcome_message
     end
+    restart
   end
 
   def player_makes_guess
@@ -202,8 +203,8 @@ class Game
   end
 
   def render_computer_output
-    if false
-      puts 'YOU SUNK A BOAT'
+    if computer_sunk_boat?
+      puts 'I SUNK A BOAT'
     elsif 1 == 2
       puts "My shot on #{computer_guess} was a hit."
     else
@@ -212,7 +213,7 @@ class Game
   end
 
   def render_player_output
-    if false
+    if player_sunk_boat?
       puts 'YOU SUNK A BOAT'
     elsif 1 == 2
       puts "Your shot on #{@player_guess} was a hit."
@@ -224,5 +225,20 @@ class Game
   def output_shot_result
     render_player_output
     render_computer_output
+  end
+
+  def restart
+    welcome_message
+    place_computer_ships
+    place_player_ships
+    game_loop
+  end
+
+  def player_sunk_boat?
+    (@computer_cruiser.health == 0 || @computer_submarine.health == 0)
+  end
+
+  def computer_sunk_boat?
+    (@player_cruiser.health == 0 || @player_submarine.health == 0)
   end
 end
