@@ -20,7 +20,8 @@ class Game
               :possible_computer_guesses,
               :total_player_health,
               :total_computer_health,
-              :computer_guess
+              :computer_guess,
+              :player_guess
 
   def initialize
     @computer_board = Board.new
@@ -39,6 +40,14 @@ class Game
     @total_player_health = 5
     @total_computer_health = 5
     @computer_guess = nil
+    @player_guess = nil
+  end
+
+  def start
+    welcome_message
+    place_computer_ships
+    place_player_ships
+    game_loop
   end
 
   def computer_loses
@@ -47,13 +56,6 @@ class Game
 
   def player_loses
     @player_cruiser.health == 0 && @player_submarine.health == 0
-  end
-
-  def start
-    welcome_message
-    place_computer_ships
-    place_player_ships
-    game_loop
   end
 
   def welcome_message
@@ -77,16 +79,12 @@ class Game
     @player_board.render2(true)
   end
 
-  def show_player_board
-    @player_board.render2(true)
-  end
-
   def place_computer_ships
     # puts 'this is the computer board'
     place_computer_cruiser
     place_computer_submarine
     puts "I have laid out my ships on the grid.\nYou now need to lay out your two ships.\nThe Cruiser is three units long and the Submarine is two units long."
-    render_player_board
+    # render_player_board
   end
 
   def place_computer_cruiser
@@ -111,10 +109,10 @@ class Game
   def place_player_ships
     prompt_player_for_cruiser
     @player_board.place(@player_cruiser, @player_cruiser_position)
-    @player_board.render2(true)
+    # @player_board.render2(true)
     prompt_player_for_submarine
     @player_board.place(@player_submarine, @player_submarine_position)
-    @player_board.render2(true)
+    # @player_board.render2(true)
   end
 
   def prompt_player_for_cruiser
@@ -140,8 +138,8 @@ class Game
   end
 
   def game_loop
+    show_both_boards
     loop do
-      show_both_boards
       if game_over?
         game_over
         break
@@ -150,15 +148,16 @@ class Game
         @player_turn = false
       else
         computer_makes_guess
+        show_both_boards
+        output_shot_result
         @player_turn = true
       end
     end
   end
 
-
   def game_over?
     computer_loses || player_loses
-   #  @total_computer_health == 0 || @total_player_health == 0
+    #  @total_computer_health == 0 || @total_player_health == 0
 
     # hp_coords = []
     # hp_coords << player_cruiser_position
@@ -169,45 +168,43 @@ class Game
     # total_hp == 0
   end
 
-
   def game_over
     if computer_loses
-     puts 'You win!'
-      welcome_message
+      puts 'You win!'
     else
       puts 'I win'
-      welcome_message
     end
+    restart
   end
 
   def player_makes_guess
-    puts "enter a cell to fire upon (example - A1): "
+    puts 'enter a cell to fire upon (example - A1): '
     input = gets.chomp.upcase
     until @possible_player_guesses.include?(input)
       puts 'Invalid Coordinate, please try again.'
       input = gets.chomp.upcase
     end
-    @computer_board.cells[input].fire_upon
-    @possible_player_guesses.delete(input)
+    @player_guess = input
+    @computer_board.cells[@player_guess].fire_upon
+    @possible_player_guesses.delete(@player_guess)
   end
 
   def computer_makes_guess
     @possible_computer_guesses.shuffle!
-    @computer_guess = (@possible_computer_guesses.shift)
-    render_computer_output
+    @computer_guess = @possible_computer_guesses.shift
     @player_board.cells[computer_guess].fire_upon
   end
 
   def show_both_boards
-    puts "========COMPUTER BOARD========"
+    puts '========COMPUTER BOARD========'
     render_computer_board
-    puts "========PLAYER BOARD========"
+    puts '========PLAYER BOARD========'
     render_player_board
   end
 
   def render_computer_output
-    if false
-      puts "YOU SUNK A BOAT"
+    if computer_sunk_boat?
+      puts 'I SUNK A BOAT'
     elsif 1 == 2
       puts "My shot on #{computer_guess} was a hit."
     else
@@ -216,13 +213,32 @@ class Game
   end
 
   def render_player_output
-    if false
-      puts "YOU SUNK A BOAT"
+    if player_sunk_boat?
+      puts 'YOU SUNK A BOAT'
     elsif 1 == 2
-      puts "Your shot on #{computer_guess} was a hit."
+      puts "Your shot on #{@player_guess} was a hit."
     else
-      puts "Your shot on #{computer_guess} was a miss."
+      puts "Your shot on #{@player_guess} was a miss."
     end
   end
 
+  def output_shot_result
+    render_player_output
+    render_computer_output
+  end
+
+  def restart
+    welcome_message
+    place_computer_ships
+    place_player_ships
+    game_loop
+  end
+
+  def player_sunk_boat?
+    (@computer_cruiser.health == 0 || @computer_submarine.health == 0)
+  end
+
+  def computer_sunk_boat?
+    (@player_cruiser.health == 0 || @player_submarine.health == 0)
+  end
 end
