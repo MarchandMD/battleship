@@ -36,10 +36,10 @@ class Cell
     if ship_present?
       if @ship.sunk?
         'X'
+      elsif ship_was_hit(show)
+        'H'
       elsif show
         'S'
-      elsif @fired_upon
-        'H'
       else
         '.'
       end
@@ -48,6 +48,10 @@ class Cell
     elsif @fired_upon == true && @ship.nil?
       'M'
     end
+  end
+
+  def ship_was_hit(show)
+    show && @fired_upon || @fired_upon
   end
 
   def ship_present?
