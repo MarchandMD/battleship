@@ -59,20 +59,18 @@ class Game
   def welcome_message
     puts "Welcome to BATTLESHIP\nEnter p to play. Enter q to quit"
     input = gets.chomp.downcase
-    until %w[p].include?(input)
-      if input == 'q'
-        start.quit
-      else puts 'please only enter: p or q'
-        input = gets.chomp.downcase
+    until %w[p q].include?(input)
+      puts 'please only enter: p or q'
+      input = gets.chomp.downcase
         #cool code goes here
-      end
+    end
+    if input == 'q'
+      quit
     end
   end
 
   def quit
-    if input == 'q'
-      exit!
-    end
+    exit!
   end
 
   def render_computer_board
