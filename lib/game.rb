@@ -128,6 +128,7 @@ class Game
   def prompt_player_for_cruiser
     puts 'Enter the squares for the Cruiser (example - A1 A2 A3): '
     input = gets.chomp.upcase
+    quit
     @player_cruiser_position = input.split(' ')
     until @player_board.valid_placement?(@player_cruiser, @player_cruiser_position)
       puts 'try again (example - A1 A2 A3):'
@@ -139,6 +140,7 @@ class Game
   def prompt_player_for_submarine
     puts 'Enter the squares for the Submarine (example - B1 B2): '
     input = gets.chomp.upcase
+    quit
     @player_submarine_position = input.split(' ')
     until @player_board.valid_placement?(@player_submarine, @player_submarine_position)
       puts 'try again (example - B1 B2):'
@@ -268,7 +270,7 @@ class Game
   end
 
   def player_sunk_cruiser?
-    @computer_cruiser.health == 0 
+    @computer_cruiser.health == 0
   end
   def player_sunk_sub?
     @computer_submarine.health == 0
