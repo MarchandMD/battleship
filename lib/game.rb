@@ -60,10 +60,13 @@ class Game
 
   def welcome_message
     puts "Welcome to BATTLESHIP\nEnter p to play. Enter q to quit"
-    input = gets.chomp.downcase
-    until %w[p q].include?(input)
+    input = gets.chomp.upcase
+    until %w[P Q].include?(input)
       puts 'please only enter: p or q'
-      input = gets.chomp.downcase
+      input = gets.chomp.upcase
+    end
+    if input == 'Q'
+      exit
     end
   end
 
@@ -118,10 +121,12 @@ class Game
   def prompt_player_for_cruiser
     puts 'Enter the squares for the Cruiser (example - A1 A2 A3): '
     input = gets.chomp.upcase
+    exit if input == 'Q'
     @player_cruiser_position = input.split(' ')
     until @player_board.valid_placement?(@player_cruiser, @player_cruiser_position)
       puts 'try again  (example - A1 A2 A3):'
       input = gets.chomp.upcase
+      exit if input == 'Q'
       @player_cruiser_position = input.split(' ')
     end
   end
@@ -129,10 +134,12 @@ class Game
   def prompt_player_for_submarine
     puts 'Enter the squares for the Submarine (example - B1 B2): '
     input = gets.chomp.upcase
+    exit if input == 'Q'
     @player_submarine_position = input.split(' ')
     until @player_board.valid_placement?(@player_submarine, @player_submarine_position)
       puts 'try again  (example - B1 B2):'
       input = gets.chomp.upcase
+      exit if input == 'Q'
       @player_submarine_position = input.split(' ')
     end
   end
@@ -180,9 +187,11 @@ class Game
   def player_makes_guess
     puts 'enter a cell to fire upon (example - A1): '
     input = gets.chomp.upcase
+    exit if input == 'Q'
     until @possible_player_guesses.include?(input)
       puts 'Invalid Coordinate, please try again.'
       input = gets.chomp.upcase
+      exit if input == 'Q'
     end
     @player_guess = input
     @computer_board.cells[@player_guess].fire_upon

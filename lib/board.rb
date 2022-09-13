@@ -34,9 +34,7 @@ class Board
 
   def valid_placement?(ship, array)
     array.each do |x|
-      if @player_occupied_cells.include?(x)
-       return false
-      end
+      return false if @player_occupied_cells.include?(x)
     end
 
     if (valid_cruiser_placement(array) && ship.length == array.length) || (valid_submarine_placement(array) && ship.length == array.length)
@@ -48,9 +46,7 @@ class Board
 
   def valid_computer_placement?(ship, array)
     array.each do |x|
-      if @computer_occupied_cells.include?(x)
-       return false
-      end
+      return false if @computer_occupied_cells.include?(x)
     end
 
     if (valid_cruiser_placement(array) && ship.length == array.length) || (valid_submarine_placement(array) && ship.length == array.length)
@@ -91,9 +87,9 @@ class Board
   def render2(reveal = false)
     if reveal
       puts "  1 2 3 4 \nA #{@cells['A1'].render(true)} #{@cells['A2'].render(true)} #{@cells['A3'].render(true)} #{@cells['A4'].render(true)} \n" +
-      "B #{@cells['B1'].render(true)} #{@cells['B2'].render(true)} #{@cells['B3'].render(true)} #{@cells['B4'].render(true)} \n" +
-      "C #{@cells['C1'].render(true)} #{@cells['C2'].render(true)} #{@cells['C3'].render(true)} #{@cells['C4'].render(true)} \n" +
-      "D #{@cells['D1'].render(true)} #{@cells['D2'].render(true)} #{@cells['D3'].render(true)} #{@cells['D4'].render(true)} \n"
+           "B #{@cells['B1'].render(true)} #{@cells['B2'].render(true)} #{@cells['B3'].render(true)} #{@cells['B4'].render(true)} \n" +
+           "C #{@cells['C1'].render(true)} #{@cells['C2'].render(true)} #{@cells['C3'].render(true)} #{@cells['C4'].render(true)} \n" +
+           "D #{@cells['D1'].render(true)} #{@cells['D2'].render(true)} #{@cells['D3'].render(true)} #{@cells['D4'].render(true)} \n"
     else
       puts "  1 2 3 4 \nA #{@cells['A1'].render} #{@cells['A2'].render} #{@cells['A3'].render} #{@cells['A4'].render} \nB #{@cells['B1'].render} #{@cells['B2'].render} #{@cells['B3'].render} #{@cells['B4'].render} \nC #{@cells['C1'].render} #{@cells['C2'].render} #{@cells['C3'].render} #{@cells['C4'].render} \nD #{@cells['D1'].render} #{@cells['D2'].render} #{@cells['D3'].render} #{@cells['D4'].render} \n"
     end
@@ -116,10 +112,10 @@ class Board
                                %w[B2 C2 D2],
                                %w[B3 C3 D3],
                                %w[B4 C4 D4]]
-    if arr != 'computer'
-      valid_cruiser_positions.include?(arr)
-    else
+    if arr == 'computer'
       valid_cruiser_positions.sample
+    else
+      valid_cruiser_positions.include?(arr)
     end
   end
 
@@ -149,10 +145,10 @@ class Board
                            %w[C3 D3],
                            %w[C4 D4]]
 
-    if arr != 'computer'
-      valid_sub_positions.include?(arr)
-    else
+    if arr == 'computer'
       valid_sub_positions.shuffle.pop
+    else
+      valid_sub_positions.include?(arr)
     end
   end
 end
