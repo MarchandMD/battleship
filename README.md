@@ -5,10 +5,12 @@
 - William Lampke
 - Michael Marchand
 
-## Current progress: 
-- 8/29/22: Wrote tests and code for Ship class
-
 ## Next steps:
-- 8/29/22: Michael wrote 3 tests and completed a PR for mikes-branch => main; William will review and then approve the pull request on Github; 
-- William will then git pull origin main, create a branch on his local machine and make the 3 tests pass; He will then Write some tests and complete a PR
-- This will then repeat for Aether, etc
+- refactor `#player_makes_guess` to simplify
+  - currently at least 6 behaviors are in the method:
+    - prompt player for input
+    - gather input
+    - evaluate input
+    - validate input (how is this different than evaluate input?)
+    - fire upon a board
+    - remove validate input from possible guesses
