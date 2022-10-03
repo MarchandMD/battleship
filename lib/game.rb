@@ -41,6 +41,8 @@ class Game
     @total_computer_health = 5
     @computer_guess = nil
     @player_guess = nil
+    @computer_shot_result = nil
+    @player_shot_result = nil
   end
 
   def start
@@ -61,13 +63,19 @@ class Game
   def welcome_message
     puts "Welcome to BATTLESHIP\nEnter p to play. Enter q to quit"
     input = gets.chomp.upcase
+
+    exit if input == "Q"
     until %w[P Q].include?(input)
       puts 'please only enter: p or q'
       input = gets.chomp.upcase
+      exit if input == "Q"
+        #cool code goes here
+
     end
-    if input == 'Q'
-      exit
-    end
+  end
+
+  def quit
+    exit!
   end
 
   def render_computer_board
@@ -121,12 +129,16 @@ class Game
   def prompt_player_for_cruiser
     puts 'Enter the squares for the Cruiser (example - A1 A2 A3): '
     input = gets.chomp.upcase
-    exit if input == 'Q'
+
+    exit if input == "Q"
+
     @player_cruiser_position = input.split(' ')
     until @player_board.valid_placement?(@player_cruiser, @player_cruiser_position)
-      puts 'try again  (example - A1 A2 A3):'
+      puts 'try again (example - A1 A2 A3):'
       input = gets.chomp.upcase
-      exit if input == 'Q'
+
+      exit if input == "Q"
+
       @player_cruiser_position = input.split(' ')
     end
   end
@@ -134,12 +146,16 @@ class Game
   def prompt_player_for_submarine
     puts 'Enter the squares for the Submarine (example - B1 B2): '
     input = gets.chomp.upcase
-    exit if input == 'Q'
+
+    exit if input == "Q"
+
     @player_submarine_position = input.split(' ')
     until @player_board.valid_placement?(@player_submarine, @player_submarine_position)
-      puts 'try again  (example - B1 B2):'
+      puts 'try again (example - B1 B2):'
       input = gets.chomp.upcase
-      exit if input == 'Q'
+
+      exit if input == "Q"
+
       @player_submarine_position = input.split(' ')
     end
   end
@@ -187,21 +203,36 @@ class Game
   def player_makes_guess
     puts 'enter a cell to fire upon (example - A1): '
     input = gets.chomp.upcase
-    exit if input == 'Q'
+    exit if input == "Q"
     until @possible_player_guesses.include?(input)
       puts 'Invalid Coordinate, please try again.'
       input = gets.chomp.upcase
-      exit if input == 'Q'
+      exit if input == "Q"
     end
     @player_guess = input
     @computer_board.cells[@player_guess].fire_upon
+
     @possible_player_guesses.delete(@player_guess)
+    if computer_board.cells[@player_guess].render == "H"
+      @player_shot_result = "H"
+    elsif computer_board.cells[@player_guess].render == 'M'
+      @player_shot_result = 'M'
+    elsif computer_board.cells[@player_guess].render == 'X'
+      @player_shot_result = "X"
+    end
   end
 
   def computer_makes_guess
     @possible_computer_guesses.shuffle!
     @computer_guess = @possible_computer_guesses.shift
     @player_board.cells[computer_guess].fire_upon
+    if player_board.cells[@computer_guess].render == "H"
+      @computer_shot_result = "H"
+    elsif player_board.cells[@computer_guess].render == 'M'
+      @computer_shot_result = 'M'
+    elsif player_board.cells[@computer_guess].render == 'X'
+      @computer_shot_result = "X"
+    end
   end
 
   def show_both_boards
@@ -212,19 +243,27 @@ class Game
   end
 
   def render_computer_output
-    if computer_sunk_boat?
-      puts 'I SUNK A BOAT'
-    elsif 1 == 2
-      puts "My shot on #{computer_guess} was a hit."
+    if @computer_shot_result == 'X'
+      if computer_sunk_cruiser?
+        puts "I SUNK YOUR CRUISER!"
+      elsif computer_sunk_sub?
+        puts 'I SUNK YOUR SUB!'
+      end
+    elsif @computer_shot_result == "H"
+      puts "My shot on #{@computer_guess} was a hit."
     else
-      puts "My shot on #{computer_guess} was a miss."
+      puts "My shot on #{@computer_guess} was a miss."
     end
   end
 
   def render_player_output
-    if player_sunk_boat?
-      puts 'YOU SUNK A BOAT'
-    elsif 1 == 2
+    if @player_shot_result == 'X'
+      if player_sunk_cruiser?
+        puts "YOU SUNK A CRUISER!"
+      elsif player_sunk_sub?
+        puts 'YOU SUNK A SUB!'
+      end
+    elsif @player_shot_result == "H"
       puts "Your shot on #{@player_guess} was a hit."
     else
       puts "Your shot on #{@player_guess} was a miss."
@@ -243,11 +282,16 @@ class Game
     game_loop
   end
 
-  def player_sunk_boat?
-    (@computer_cruiser.health == 0 || @computer_submarine.health == 0)
+  def player_sunk_cruiser?
+    @computer_cruiser.health == 0
   end
-
-  def computer_sunk_boat?
-    (@player_cruiser.health == 0 || @player_submarine.health == 0)
+  def player_sunk_sub?
+    @computer_submarine.health == 0
+  end
+  def computer_sunk_cruiser?
+    @player_cruiser.health == 0
+  end
+  def computer_sunk_sub?
+    @player_submarine.health == 0
   end
 end
