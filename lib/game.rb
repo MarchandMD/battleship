@@ -34,8 +34,8 @@ class Game
     @computer_cruiser_position = nil
     @computer_submarine = Ship.new('Submarine', 2)
     @computer_submarine_position = nil
-    @possible_player_guesses = %w[A1 A2 A3 A4 B1 B2 B3 B4 C1 C2 C3 C4 D1 D2 D3 D4]
-    @possible_computer_guesses = %w[A1 A2 A3 A4 B1 B2 B3 B4 C1 C2 C3 C4 D1 D2 D3 D4]
+    @possible_player_guesses = @computer_board.cells.keys
+    @possible_computer_guesses = @player_board.cells.keys
     @player_turn = true
     @total_player_health = 5
     @total_computer_health = 5
@@ -129,16 +129,12 @@ class Game
   def prompt_player_for_cruiser
     puts 'Enter the squares for the Cruiser (example - A1 A2 A3): '
     input = gets.chomp.upcase
-
-    exit if input == "Q"
-
+    evaluate_input_for_quit(input)
     @player_cruiser_position = input.split(' ')
     until @player_board.valid_placement?(@player_cruiser, @player_cruiser_position)
       puts 'try again (example - A1 A2 A3):'
       input = gets.chomp.upcase
-
-      exit if input == "Q"
-
+      evaluate_input_for_quit(input)
       @player_cruiser_position = input.split(' ')
     end
   end
@@ -146,16 +142,12 @@ class Game
   def prompt_player_for_submarine
     puts 'Enter the squares for the Submarine (example - B1 B2): '
     input = gets.chomp.upcase
-
-    exit if input == "Q"
-
+    evaluate_input_for_quit(input)
     @player_submarine_position = input.split(' ')
     until @player_board.valid_placement?(@player_submarine, @player_submarine_position)
       puts 'try again (example - B1 B2):'
       input = gets.chomp.upcase
-
-      exit if input == "Q"
-
+      evaluate_input_for_quit(input)
       @player_submarine_position = input.split(' ')
     end
   end
@@ -180,15 +172,6 @@ class Game
 
   def game_over?
     computer_loses || player_loses
-    #  @total_computer_health == 0 || @total_player_health == 0
-
-    # hp_coords = []
-    # hp_coords << player_cruiser_position
-    # hp_coords << player_submarine_position
-    # hp_coords.each do |hp|
-    #   total_hp += hp.cell.ship.health
-    # end
-    # total_hp == 0
   end
 
   def game_over
@@ -203,21 +186,21 @@ class Game
   def player_makes_guess
     puts 'enter a cell to fire upon (example - A1): '
     input = gets.chomp.upcase
-    exit if input == "Q"
+    evaluate_input_for_quit(input)
     until @possible_player_guesses.include?(input)
       puts 'Invalid Coordinate, please try again.'
       input = gets.chomp.upcase
-      exit if input == "Q"
+      evaluate_input_for_quit(input)
     end
-    @player_guess = input
-    @computer_board.cells[@player_guess].fire_upon
 
-    @possible_player_guesses.delete(@player_guess)
-    if computer_board.cells[@player_guess].render == "H"
+    @computer_board.cells[input].fire_upon
+    @possible_player_guesses.delete(input)
+
+    if computer_board.cells[input].render == "H"
       @player_shot_result = "H"
-    elsif computer_board.cells[@player_guess].render == 'M'
+    elsif computer_board.cells[input].render == 'M'
       @player_shot_result = 'M'
-    elsif computer_board.cells[@player_guess].render == 'X'
+    elsif computer_board.cells[input].render == 'X'
       @player_shot_result = "X"
     end
   end
@@ -293,5 +276,9 @@ class Game
   end
   def computer_sunk_sub?
     @player_submarine.health == 0
+  end
+
+  def evaluate_input_for_quit(input)
+    exit if input == "Q"
   end
 end
