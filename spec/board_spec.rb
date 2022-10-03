@@ -1,4 +1,4 @@
-¡require './lib/board'
+require './lib/board'
 require './lib/cell'
 require './lib/ship'
 require 'pry'
@@ -120,13 +120,13 @@ RSpec.describe Board do
 
   end
 
-  describe '#occupied_cells' do
+  describe '@player_occupied_cells' do
     board = Board.new
     cruiser = Ship.new('Cruiser', 3)
     board.place(cruiser, %w[A1 A2 A3])
     submarine = Ship.new('Submarine', 2)
     it 'has a list of occupied cells' do
-      expect(board.occupied_cells).to eq(%w[A1 A2 A3])
+      expect(board.player_occupied_cells).to eq(%w[A1 A2 A3])
     end
 
   end
