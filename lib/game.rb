@@ -83,6 +83,7 @@ class Game
     @computer_board.render2(true)
   end
 
+  # makes the wrapped code more readable; does it though?
   def render_player_board
     @player_board.render2(true)
   end
