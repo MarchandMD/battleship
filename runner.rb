@@ -1,3 +1,3 @@
-require './lib/game.rb'
+require './lib/game'
 
 game = Game.new.start
