@@ -13,7 +13,6 @@ class Game
               :player_submarine,
               :player_submarine_position,
               :computer_cruiser,
-              :computer_cruiser_position,
               :computer_submarine,
               :computer_submarine_position,
               :possible_player_guesses,
@@ -32,7 +31,6 @@ class Game
     @player_submarine = Ship.new('Submarine', 2)
     @player_submarine_position = nil
     @computer_cruiser = Ship.new('Cruiser', 3)
-    @computer_cruiser_position = nil
     @computer_submarine = Ship.new('Submarine', 2)
     @computer_submarine_position = nil
     @possible_player_guesses = @computer_board.cells.keys
@@ -80,10 +78,12 @@ class Game
     @computer_board.render2
   end
 
+  # unused method
   def show_computer_ships
     @computer_board.render2(true)
   end
 
+  # makes the wrapped code more readable; does it though?
   def render_player_board
     @player_board.render2(true)
   end
@@ -95,8 +95,8 @@ class Game
   end
 
   def place_computer_cruiser
-    @computer_cruiser_position = @computer_board.valid_cruiser_placement('computer')
-    @computer_board.place_computer_ship(@computer_cruiser, @computer_cruiser_position)
+    position = @computer_board.valid_cruiser_placement('computer')
+    @computer_board.place_computer_ship(@computer_cruiser, position)
   end
 
   def place_computer_submarine
