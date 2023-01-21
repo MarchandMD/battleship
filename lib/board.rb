@@ -24,7 +24,7 @@ class Board
     @computer_occupied_cells = []
   end
 
-  # used to determine if ship placement is valid; could this be used for guesses? 
+  # used to determine if ship placement is valid; could this be used for guesses?
   def valid_coordinate?(coordinate)
     @cells.keys.include?(coordinate)
   end

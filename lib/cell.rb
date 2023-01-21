@@ -24,10 +24,10 @@ class Cell
   end
 
   def fire_upon
-    if !@ship.nil?
-      @ship.hit
+    if @ship.nil?
       @fired_upon = true
     else
+      @ship.hit
       @fired_upon = true
     end
   end
@@ -44,18 +44,17 @@ class Cell
         '.'
       end
     elsif @fired_upon == false
-        '.'
+      '.'
     elsif @fired_upon == true && @ship.nil?
       'M'
     end
   end
 
   def ship_was_hit(show)
-    show && @fired_upon || @fired_upon
+    (show && @fired_upon) || @fired_upon
   end
 
   def ship_present?
     !@ship.nil?
   end
-
 end

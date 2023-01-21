@@ -123,8 +123,6 @@ ruby v2.7.4
 
 ## Usage
 
-### Text to Braille
-
 1. `cd` into the directory
 
 ```bs

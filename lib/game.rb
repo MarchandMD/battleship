@@ -22,7 +22,6 @@ class Game
               :computer_guess,
               :player_guess
 
-
   def initialize
     @computer_board = Board.new
     @player_board = Board.new

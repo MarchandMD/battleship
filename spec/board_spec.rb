@@ -25,7 +25,6 @@ RSpec.describe Board do
     end
   end
 
-
   describe '#valid_placement?' do
     it 'checks if ship length is correct when placing' do
       board = Board.new
@@ -91,7 +90,6 @@ RSpec.describe Board do
       board.place(cruiser, %w[A1 A2 A3])
       expect(board.cells['A1']).to be_a Cell
       expect { board.render2(true) }.to output("  1 2 3 4 \nA S S S . \nB . . . . \nC . . . . \nD . . . . \n").to_stdout
-
     end
   end
 
@@ -105,7 +103,6 @@ RSpec.describe Board do
     it 'can determine if cruiser placement is not valid' do
       expect(board.valid_cruiser_placement(%w[A1 A2 B3])).to be false
     end
-
   end
   describe '#valid_submarine_placement' do
     board = Board.new
@@ -117,7 +114,6 @@ RSpec.describe Board do
     it 'can determine if submarine placement is not valid' do
       expect(board.valid_submarine_placement(%w[A1 C2])).to be false
     end
-
   end
 
   describe '@player_occupied_cells' do
@@ -128,6 +124,5 @@ RSpec.describe Board do
     it 'has a list of occupied cells' do
       expect(board.player_occupied_cells).to eq(%w[A1 A2 A3])
     end
-
   end
 end
