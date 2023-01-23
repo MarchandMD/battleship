@@ -45,34 +45,35 @@ RSpec.describe Game do
     end
   end
 
-  xit 'prints a welcome message' do
-    expect { game.welcome_message }.to output.to_stdout
-  end
-
   describe '#welcome_message' do
-    xit 'prints a statement to the screen' do
+    it 'prints a statement to the screen' do
       expect { game.welcome_message }.to output.to_stdout
     end
   end
 
   describe '#render_computer_board' do
-    xit 'renders the computer board' do
+    it 'renders the computer board' do
       expect { game.render_computer_board }.to output.to_stdout
     end
   end
 
   describe '#render_player_board' do
-    xit 'renders the player board' do
+    it 'renders the player board' do
       expect { game.render_player_board }.to output.to_stdout
     end
   end
 
   describe '#place_computer_ships' do
-    xit 'updates the @computer_cruiser_position' do
-      expect(game.computer_cruiser_position).to eq(nil)
+    it 'updates the @computer_board.computer_occupied_cells' do
+      expect(game.computer_board.computer_occupied_cells.length).to eq(0)
       game.place_computer_ships
-      expect(game.computer_cruiser_position.length).to eq(3)
-      expect(game.computer_submarine_position.length).to eq(2)
+      expect(game.computer_board.computer_occupied_cells.length).to eq(5)
+    end
+  end
+
+  describe '#player_cruiser_prompt' do
+    it 'gives player instructions for setting cruiser' do
+      expect{ game.player_cruiser_prompt }.to output.to_stdout
     end
   end
 
@@ -118,9 +119,9 @@ RSpec.describe Game do
     end
   end
 
-  describe '#prompt_player_for_cruiser' do
-    xit 'asks for cruiser coordinates' do
-      expect { game.prompt_player_for_cruiser }.to output.to_stdout
+  describe '#player_cruiser_placement' do
+    it 'asks for cruiser coordinates' do
+      expect(game.player_cruiser_position).to eq(nil)
     end
   end
 
