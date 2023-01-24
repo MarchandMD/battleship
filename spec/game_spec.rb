@@ -73,14 +73,15 @@ RSpec.describe Game do
 
   describe '#player_cruiser_prompt' do
     it 'gives player instructions for setting cruiser' do
-      expect{ game.player_cruiser_prompt }.to output.to_stdout
+      expect { game.player_cruiser_prompt }.to output.to_stdout
     end
   end
 
-  describe '#place_player_ships' do
-    xit 'asks for 3 squares for the Cruiser' do
-      game.stub(:prompt_player_for_cruiser) { @player_cruiser_position = %w[A1 A2 A3] }
-      expect(game.place_player_ships).to eq(true)
+  describe '#player_cruiser_placement' do
+    it 'updates @player_cruiser_position' do
+      expect(game.player_cruiser_position).to eq(nil)
+      game.player_cruiser_placement('A1 A2 A3')
+      expect(game.player_cruiser_position).to eq(['A1', 'A2', 'A3'])
     end
   end
 
@@ -90,51 +91,14 @@ RSpec.describe Game do
   end
 
   describe '#game_over?' do
-    xit 'asks if the game is over' do
-      expect { game.game_over? }.to be(false)
-    end
-  end
-
-  describe '#game_over' do
-    xit 'can declare game over' do
-      expect { game.game_over }.to eq
-    end
-  end
-
-  describe '#player_turn?' do
-    xit "asks if player_turn yet" do
-      expect { game.player_turn? }.to eq(true)
-    end
-  end
-
-  describe '#player_makes_guess' do
-    xit 'can prompt player to input guess' do
-      expect { game.player_makes_guess }.to output.to_stdout
-    end
-  end
-
-  describe '#computer_makes_guess' do
-    xit 'initiates computer making guess' do
-      expect { game.computer_makes_guess }.to output.to_stdout
+    it 'asks if the game is over' do
+      expect(game.game_over?).to be(false)
     end
   end
 
   describe '#player_cruiser_placement' do
     it 'asks for cruiser coordinates' do
       expect(game.player_cruiser_position).to eq(nil)
-    end
-  end
-
-  describe '#prompt_player_for_submarine' do
-    xit 'asks for submarine coordinates' do
-      expect { game.prompt_player_for_submarine }.to output.to_stdout
-    end
-  end
-
-  describe '#show_both_boards' do
-    xit 'renders both boards to stdout' do
-      game.place_computer_ships
-      expect { game.show_both_boards }.to output.to_stdout
     end
   end
 end
