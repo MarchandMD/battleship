@@ -90,10 +90,36 @@ class Game
     @computer_board.place_computer_ship(@computer_cruiser, position)
   end
 
-  def place_computer_submarine
-    valid_sub_positions = [%w[A1 A2], %w[A2 A3], %w[A3 A4], %w[B1 B2], %w[B2 B3], %w[B3 B4], %w[C1 C2], %w[C2 C3],
-                           %w[C3 C4], %w[D1 D2], %w[D2 D3], %w[D3 D4], %w[A1 B1], %w[A2 B2], %w[A3 B3], %w[A4 B4], %w[B1 C1], %w[B2 C2], %w[B3 C3], %w[B4 C4], %w[C1 D1], %w[C2 D2], %w[C3 D3], %w[C4 D4]]
+  def valid_sub_positions
+    [
+      %w[A1 A2],
+      %w[A2 A3],
+      %w[A3 A4],
+      %w[B1 B2],
+      %w[B2 B3],
+      %w[B3 B4],
+      %w[C1 C2],
+      %w[C2 C3],
+      %w[C3 C4],
+      %w[D1 D2],
+      %w[D2 D3],
+      %w[D3 D4],
+      %w[A1 B1],
+      %w[A2 B2],
+      %w[A3 B3],
+      %w[A4 B4],
+      %w[B1 C1],
+      %w[B2 C2],
+      %w[B3 C3],
+      %w[B4 C4],
+      %w[C1 D1],
+      %w[C2 D2],
+      %w[C3 D3],
+      %w[C4 D4]
+    ]
+  end
 
+  def place_computer_submarine
     @computer_submarine_position = valid_sub_positions.shuffle!.pop
 
     @computer_submarine_position = valid_sub_positions.shuffle!.pop until no_overlap
@@ -118,7 +144,7 @@ class Game
 
   def player_cruiser_placement(input = gets.chomp.upcase)
     evaluate_input_for_quit(input)
-  
+
     @player_cruiser_position = input.split(' ')
 
     until @player_board.valid_placement?(@player_cruiser, @player_cruiser_position)
