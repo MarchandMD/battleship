@@ -140,6 +140,7 @@ follow on screen instructions
 - README
 - [ ] add extension features
 - [ ] add video of game play
+- [ ] Setup project in REPL so people can play it
 
 
 See the [open issues](https://github.com/marchandmd/Battleship/issues) for a full list of proposed features (and known issues).
