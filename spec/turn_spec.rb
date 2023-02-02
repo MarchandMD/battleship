@@ -17,5 +17,4 @@ RSpec.describe Turn do
     expect(turn.human).to eq(human)
     expect(turn.ai).to eq(ai)
   end
-  
 end

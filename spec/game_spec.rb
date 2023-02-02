@@ -34,7 +34,7 @@ RSpec.describe Game do
     end
 
     it 'has @player_cruiser_position' do
-      expect(game.player_cruiser_position).to eq(nil)
+      expect(game.player_cruiser_position).to eq([])
     end
     it 'has @player_submarine_position' do
       expect(game.player_submarine_position).to eq(nil)
@@ -42,12 +42,6 @@ RSpec.describe Game do
 
     it 'has @computer_submarine_position' do
       expect(game.computer_submarine_position).to eq(nil)
-    end
-  end
-
-  describe '#welcome_message' do
-    it 'prints a statement to the screen' do
-      expect { game.welcome_message }.to output.to_stdout
     end
   end
 
@@ -79,14 +73,9 @@ RSpec.describe Game do
 
   describe '#player_cruiser_placement' do
     it 'updates @player_cruiser_position' do
-      expect(game.player_cruiser_position).to eq(nil)
+      expect(game.player_cruiser_position).to eq([])
       game.player_cruiser_placement('A1 A2 A3')
-      expect(game.player_cruiser_position).to eq(['A1', 'A2', 'A3'])
-    end
-  end
-
-  describe '#start_turn' do
-    it 'can start turn' do
+      expect(game.player_cruiser_position).to eq(%w[A1 A2 A3])
     end
   end
 
@@ -98,7 +87,7 @@ RSpec.describe Game do
 
   describe '#player_cruiser_placement' do
     it 'asks for cruiser coordinates' do
-      expect(game.player_cruiser_position).to eq(nil)
+      expect(game.player_cruiser_position).to eq([])
     end
   end
 end

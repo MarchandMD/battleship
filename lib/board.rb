@@ -41,17 +41,6 @@ class Board
     end
   end
 
-  def valid_computer_placement?(ship, array)
-    array.each do |x|
-      return false if @computer_occupied_cells.include?(x)
-    end
-
-    if (valid_cruiser_placement(array) && ship.length == array.length) || (valid_submarine_placement(array) && ship.length == array.length)
-      true
-    else
-      false
-    end
-  end
 
   def place_computer_ship(ship, array)
     cell_1 = @cells[array[0]]
