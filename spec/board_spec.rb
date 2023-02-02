@@ -49,7 +49,7 @@ RSpec.describe Board do
     end
 
     it 'can determine if a placement is valid' do
-      cruiser = Ship.new('Cruiser', 3)
+      Ship.new('Cruiser', 3)
       submarine = Ship.new('Submarine', 2)
       expect(@board.valid_placement?(submarine, %w[A1 B1])).to eq(true)
     end
@@ -87,7 +87,7 @@ RSpec.describe Board do
   end
 
   describe '#valid_cruiser_placement' do
-    cruiser = Ship.new('Cruiser', 3)
+    Ship.new('Cruiser', 3)
 
     it 'can determine if cruiser placement is valid' do
       expect(@board.valid_cruiser_placement(%w[A1 A2 A3])).to eq(true)
@@ -97,7 +97,7 @@ RSpec.describe Board do
     end
   end
   describe '#valid_submarine_placement' do
-    submarine = Ship.new('Cruiser', 2)
+    Ship.new('Cruiser', 2)
 
     it 'can determine if submarine placement is valid' do
       expect(@board.valid_submarine_placement(%w[A1 A2])).to eq(true)
@@ -111,8 +111,18 @@ RSpec.describe Board do
     it 'has a list of occupied cells' do
       cruiser = Ship.new('Cruiser', 3)
       @board.place(cruiser, %w[A1 A2 A3])
-      submarine = Ship.new('Submarine', 2)
+      Ship.new('Submarine', 2)
       expect(@board.player_occupied_cells).to eq(%w[A1 A2 A3])
     end
+  end
+
+  describe '#valid_computer_placement' do
+    it 'returns false if attempting to place a ship in an occupied location' do
+      cruiser = Ship.new('cruiser', 3)
+      submarine = Ship.new('submarine', 2)
+
+      
+    end
+
   end
 end

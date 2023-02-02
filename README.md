@@ -40,7 +40,7 @@
     <a href="https://backend.turing.edu/module1/projects/battleship/"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/marchandmd/Battleship">View Demo</a>
+    <a href="https://replit.com/@KurtBrusselSpro/Battleship">View Demo</a>
     ·
     <a href="https://github.com/marchandmd/Battleship/issues">Report Bug</a>
     ·

@@ -26,7 +26,7 @@ class Game
     @computer_board = Board.new
     @player_board = Board.new
     @player_cruiser = Ship.new('Cruiser', 3)
-    @player_cruiser_position = nil
+    @player_cruiser_position = []
     @player_submarine = Ship.new('Submarine', 2)
     @player_submarine_position = nil
     @computer_cruiser = Ship.new('Cruiser', 3)
@@ -44,7 +44,8 @@ class Game
   end
 
   def start
-    welcome_message
+    puts "Welcome to BATTLESHIP\nEnter p to play. Enter q to quit"
+    play_or_quit
     place_computer_ships
     place_player_ships
     game_loop
@@ -58,10 +59,7 @@ class Game
     @player_cruiser.health == 0 && @player_submarine.health == 0
   end
 
-  def welcome_message
-    puts "Welcome to BATTLESHIP\nEnter p to play. Enter q to quit"
-
-    input = gets.chomp.upcase
+  def play_or_quit(input = gets.chomp.upcase)
     evaluate_input_for_quit(input)
   end
 
@@ -116,17 +114,20 @@ class Game
       %w[C2 D2],
       %w[C3 D3],
       %w[C4 D4]
-    ]
+    ].shuffle!.pop
   end
 
   def place_computer_submarine
-    @computer_submarine_position = valid_sub_positions.shuffle!.pop
-
-    @computer_submarine_position = valid_sub_positions.shuffle!.pop until no_overlap
+    @computer_submarine_position = valid_sub_positions
+    @computer_submarine_position = valid_sub_positions until no_overlap
     @computer_board.place_computer_ship(@computer_submarine, @computer_submarine_position)
   end
 
+  # this is intended to avoid a submarine overlapping with a cruiser, right?
   def no_overlap
+    # combine the computer_occupied_cells with the computer_submarine_position and return their unique length
+    # and compare it to the total length of the computer_occupied_cells combined with the computer_submarine_position
+    # the way this determines no_overlap is be returning a boolean value; And it's used in conjunction with setting the computer_submarine_position;
     (@computer_board.computer_occupied_cells + @computer_submarine_position).uniq.length == (@computer_board.computer_occupied_cells + @computer_submarine_position).length
   end
 
@@ -143,23 +144,20 @@ class Game
   end
 
   def player_cruiser_placement(input = gets.chomp.upcase)
-    evaluate_input_for_quit(input)
-
-    @player_cruiser_position = input.split(' ')
-
-    until @player_board.valid_placement?(@player_cruiser, @player_cruiser_position)
-      puts 'try again (example - A1 A2 A3):'
-      input
+    until @player_board.valid_placement?(@player_cruiser, input.split)
       evaluate_input_for_quit(input)
-      @player_cruiser_position = input.split(' ')
+      puts 'try again (example - A1 A2 A3):'
+      input = gets.chomp.upcase
     end
+
+    @player_cruiser_position = input.split
   end
 
   def prompt_player_for_submarine
     puts 'Enter the squares for the Submarine (example - B1 B2): '
     input = gets.chomp.upcase
     evaluate_input_for_quit(input)
-    @player_submarine_position = input.split(' ')
+    @player_submarine_position = input.split
     until @player_board.valid_placement?(@player_submarine, @player_submarine_position)
       puts 'try again (example - B1 B2):'
       input = gets.chomp.upcase
@@ -295,9 +293,11 @@ class Game
     render_computer_output
   end
 
-  # needs to be refactored to clear boards
   def restart
-    welcome_message
+    @computer_board = Board.new
+    @player_board = Board.new
+    puts "Welcome to BATTLESHIP\nEnter p to play. Enter q to quit"
+    play_or_quit
     place_computer_ships
     place_player_ships
     game_loop
