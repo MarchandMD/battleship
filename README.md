@@ -30,7 +30,7 @@
 <br />
 <div align="center">
 
-  <h1 align="center">Battleship</h1>
+  <h1 align="center">Battleship!</h1>
 
   <p align="center">
     The classic board game, played in the command line
